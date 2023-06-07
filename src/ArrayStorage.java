@@ -4,24 +4,33 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    public static final int MAX_SIZE = 10000;
+    private Resume[] storage;
+    private int size;
+
+    public ArrayStorage() {
+        this.storage = new Resume[MAX_SIZE];
+        this.size = 0;
+    }
 
     void clear() {
-        Arrays.fill(storage, null);
+        if (size == 0) {
+            return;
+        }
+        Arrays.fill(storage, 0, size - 1, null);
+        size = 0;
     }
 
     void save(Resume r) {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                storage[i] = r;
-                break;
-            }
+        if (size == MAX_SIZE) {
+            return;
         }
+        storage[size++] = r;
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null && storage[i].uuid.equals(uuid)) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
         }
@@ -29,16 +38,11 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < storage.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                storage[i] = null;
-                for (int l = i + 1; l < storage.length; l++) {
-                    if (storage[l] == null) {
-                        break;
-                    }
-                    storage[l-1] = storage[l];
-                    storage[l] = null;
-                }
+                storage[i] = storage[size - 1];
+                storage[size - 1] = null;
+                size--;
                 break;
             }
         }
@@ -48,11 +52,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOf(storage, size());
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
-        int result = (int) Arrays.stream(storage).filter(element -> element != null).count();
-        return result;
+        return size;
     }
 }
