@@ -9,20 +9,19 @@ public class ArrayStorage {
     private int size;
 
     public ArrayStorage() {
-        this.storage = new Resume[MAX_SIZE];
-        this.size = 0;
+        storage = new Resume[MAX_SIZE];
     }
 
     void clear() {
         if (size == 0) {
             return;
         }
-        Arrays.fill(storage, 0, size - 1, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     void save(Resume r) {
-        if (size == MAX_SIZE) {
+        if (size >= MAX_SIZE) {
             return;
         }
         storage[size++] = r;
