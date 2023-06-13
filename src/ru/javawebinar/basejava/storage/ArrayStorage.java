@@ -1,13 +1,13 @@
-package com.urise.webapp.storage;
+package ru.javawebinar.basejava.storage;
 
-import com.urise.webapp.model.Resume;
+import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
+public class ArrayStorage implements Storage{
     public static final int MAX_SIZE = 10000;
     protected final Resume[] storage = new Resume[MAX_SIZE];
     private int size;
