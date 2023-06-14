@@ -2,28 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
-
 /**
  * Array based storage for Resumes
  */
 
-public class ArrayStorage extends AbstractArrayStorage{
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-    }
-
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index != -1) {
-            storage[index] = resume;
-            printWarningMessage(resume.getUuid(), "was updated");
-        } else {
-            printWarningMessage(resume.getUuid(), "is not found in database");
-        }
-    }
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
@@ -50,9 +33,6 @@ public class ArrayStorage extends AbstractArrayStorage{
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
 
     protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
