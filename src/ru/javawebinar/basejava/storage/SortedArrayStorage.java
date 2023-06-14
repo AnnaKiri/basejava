@@ -25,7 +25,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
-            System.arraycopy(storage, index + 1, storage, index, size - index);
+            System.arraycopy(storage, index + 1, storage, index, size - index - 1);
             storage[size - 1] = null;
             size--;
         } else {
