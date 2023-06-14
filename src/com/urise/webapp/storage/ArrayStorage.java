@@ -31,7 +31,6 @@ public class ArrayStorage {
         int index = getIndex(r.getUuid());
         if (size >= MAX_SIZE) {
             System.out.println("Database is full, you can't add more resume");
-            return;
         } else if (index != -1) {
             System.out.println("Database already contains this resume with uuid = " + r.getUuid());
         } else {
