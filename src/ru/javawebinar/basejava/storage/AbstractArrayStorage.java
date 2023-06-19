@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -16,9 +19,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (size >= MAX_SIZE) {
-            System.out.println("Database is full, you can't add more resume");
+            throw new StorageException("Storage overflow", resume.getUuid());
         } else if (index >= 0) {
-            System.out.println("Database already contains this resume with uuid = " + resume.getUuid());
+            throw new ExistStorageException(resume.getUuid());
         } else {
             insertElement(resume, index);
             size++;
@@ -32,7 +35,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[size - 1] = null;
             size--;
         } else {
-            printWarningMessage(uuid, "is not found in database");
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -42,8 +45,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             return storage[index];
         } else {
-            printWarningMessage(uuid, "is not found in database");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -51,14 +53,9 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
             storage[index] = resume;
-            printWarningMessage(resume.getUuid(), "was updated");
         } else {
-            printWarningMessage(resume.getUuid(), "is not found in database");
+            throw new NotExistStorageException(resume.getUuid());
         }
-    }
-
-    protected void printWarningMessage(String uuid, String message) {
-        System.out.println("Resume with uuid = " + uuid + " " + message);
     }
 
     public void clear() {
