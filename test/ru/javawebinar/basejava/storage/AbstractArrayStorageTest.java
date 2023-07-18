@@ -52,23 +52,23 @@ public abstract class AbstractArrayStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() throws Exception {
-        Resume resume = new Resume(UUID_4);
-        storage.update(resume);
+        storage.update(RESUME_4);
     }
 
     @Test
     public void getAll() throws Exception {
         Resume[] resume = storage.getAll();
         Assert.assertEquals(3, resume.length);
-        Assert.assertEquals(resume[0], RESUME_1);
-        Assert.assertEquals(resume[1], RESUME_2);
-        Assert.assertEquals(resume[2], RESUME_3);
+        Assert.assertEquals(RESUME_1, resume[0]);
+        Assert.assertEquals(RESUME_2, resume[1]);
+        Assert.assertEquals(RESUME_3, resume[2]);
     }
 
     @Test
     public void saveNormal() throws Exception {
-        storage.save(new Resume(UUID_4));
+        storage.save(RESUME_4);
         Assert.assertEquals(4, storage.size());
+        Assert.assertEquals(RESUME_4, storage.get(UUID_4));
     }
 
     @Test(expected = ExistStorageException.class)
