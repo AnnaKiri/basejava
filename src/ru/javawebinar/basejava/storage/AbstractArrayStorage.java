@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int MAX_SIZE = 10000;
     protected final Resume[] storage = new Resume[MAX_SIZE];
     protected int size = 0;
@@ -41,7 +41,6 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-
         if (index >= 0) {
             return storage[index];
         } else {
@@ -66,10 +65,4 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
-
-    protected abstract int getIndex(String uuid);
-
-    protected abstract void insertElement(Resume resume, int index);
-
-    protected abstract void deleteElement(int index);
 }
