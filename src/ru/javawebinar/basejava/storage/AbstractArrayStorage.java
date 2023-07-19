@@ -11,7 +11,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
-    protected int getSize() {
+    public int size() {
         return size;
     }
 
@@ -43,13 +43,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doClear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     @Override
-    protected Resume[] doGetAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 

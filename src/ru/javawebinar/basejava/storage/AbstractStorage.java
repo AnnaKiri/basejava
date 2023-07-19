@@ -7,13 +7,6 @@ import ru.javawebinar.basejava.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     @Override
-    public void clear() {
-        doClear();
-    }
-
-    protected abstract void doClear();
-
-    @Override
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
@@ -22,8 +15,6 @@ public abstract class AbstractStorage implements Storage {
             throw new NotExistStorageException(resume.getUuid());
         }
     }
-
-    protected abstract void doUpdate(Resume resume, int index);
 
     @Override
     public void save(Resume resume) {
@@ -35,8 +26,6 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
-    protected abstract void doSave(Resume resume, int index);
-
     @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
@@ -46,8 +35,6 @@ public abstract class AbstractStorage implements Storage {
             throw new NotExistStorageException(uuid);
         }
     }
-
-    protected abstract Resume doGet(int index);
 
     @Override
     public void delete(String uuid) {
@@ -59,21 +46,13 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
+    protected abstract void doUpdate(Resume resume, int index);
+
+    protected abstract void doSave(Resume resume, int index);
+
+    protected abstract Resume doGet(int index);
+
     protected abstract void doDelete(int index);
-
-    @Override
-    public Resume[] getAll() {
-        return doGetAll();
-    }
-
-    protected abstract Resume[] doGetAll();
-
-    @Override
-    public int size() {
-        return getSize();
-    }
-
-    protected abstract int getSize();
 
     protected abstract int getIndex(String uuid);
 }
