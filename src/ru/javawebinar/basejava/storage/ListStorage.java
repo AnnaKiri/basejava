@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
@@ -11,57 +9,37 @@ public class ListStorage extends AbstractStorage {
     protected final List<Resume> listStorage = new ArrayList<>();
 
     @Override
-    public void clear() {
+    public void doClear() {
         listStorage.clear();
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            listStorage.set(index, resume);
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+    protected void doUpdate(Resume resume, int index) {
+        listStorage.set(index, resume);
     }
 
     @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            insertElement(resume, index);
-        }
+    protected void doSave(Resume resume, int index) {
+        listStorage.add(resume);
     }
 
     @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return listStorage.get(index);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    protected Resume doGet(int index) {
+        return listStorage.get(index);
     }
 
     @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            deleteElement(index);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    protected void doDelete(int index) {
+        listStorage.remove(index);
     }
 
     @Override
-    public Resume[] getAll() {
+    protected Resume[] doGetAll() {
         return listStorage.toArray(new Resume[0]);
     }
 
     @Override
-    public int size() {
+    protected int getSize() {
         return listStorage.size();
     }
 
@@ -74,15 +52,4 @@ public class ListStorage extends AbstractStorage {
         }
         return -1;
     }
-
-    @Override
-    protected void insertElement(Resume resume, int index) {
-        listStorage.add(resume);
-    }
-
-    @Override
-    protected void deleteElement(int index) {
-        listStorage.remove(index);
-    }
-
 }
