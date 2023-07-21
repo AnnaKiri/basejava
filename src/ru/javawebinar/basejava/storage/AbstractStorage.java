@@ -40,7 +40,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doDelete(Object searchKey);
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getIndex(String uuid);
 
     private Object getExistingSearchKey(String uuid) throws ExistStorageException{
         Object searchKey = getIndex(uuid);
