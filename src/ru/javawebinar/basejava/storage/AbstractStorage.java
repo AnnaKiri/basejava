@@ -30,6 +30,21 @@ public abstract class AbstractStorage implements Storage {
         doDelete(searchKey);
     }
 
+    private Object getExistingSearchKey(String uuid) throws ExistStorageException{
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+
+    private Object getNotExistingSearchKey(String uuid) throws NotExistStorageException{
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
     protected abstract boolean isExist(Object searchKey);
 
     protected abstract void doUpdate(Resume resume, Object searchKey);
@@ -40,22 +55,5 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doDelete(Object searchKey);
 
-    protected abstract Object getIndex(String uuid);
-
-    private Object getExistingSearchKey(String uuid) throws ExistStorageException{
-        Object searchKey = getIndex(uuid);
-        if (isExist(searchKey)) {
-            throw new ExistStorageException(uuid);
-        }
-        return searchKey;
-    }
-
-    private Object getNotExistingSearchKey(String uuid) throws NotExistStorageException{
-        Object searchKey = getIndex(uuid);
-        if (!isExist(searchKey)) {
-            throw new NotExistStorageException(uuid);
-        }
-        return searchKey;
-
-    }
+    protected abstract Object getSearchKey(String uuid);
 }
