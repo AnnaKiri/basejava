@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class AbstractStorageTest {
     protected final Storage storage;
@@ -51,7 +51,7 @@ public class AbstractStorageTest {
     public void clear() throws Exception {
         storage.clear();
         assertSize(0);
-        Assert.assertArrayEquals(new Resume[0], storage.getAll());
+        Assert.assertArrayEquals(new Resume[0], storage.getAllSorted().toArray());
     }
 
     @Test
@@ -69,9 +69,8 @@ public class AbstractStorageTest {
     @Test
     public void getAll() throws Exception {
         Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
-        Resume[] actual = storage.getAll();
-        Arrays.sort(actual);
-        Assert.assertArrayEquals(expected, actual);
+        List<Resume> actual = storage.getAllSorted();
+        Assert.assertArrayEquals(expected, actual.toArray());
     }
 
     @Test
