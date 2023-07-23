@@ -15,8 +15,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        return storage.values().stream().sorted().toList();
+    public List<Resume> getList() {
+        return storage.values().stream().toList();
     }
 
     @Override
