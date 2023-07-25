@@ -1,14 +1,15 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
  */
 public class Resume implements Comparable<Resume>{
 
-    private String fullName;
+    private final String fullName;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     private final String uuid;
 
@@ -19,6 +20,22 @@ public class Resume implements Comparable<Resume>{
     public Resume(String uuid, String fullName) {
         this.uuid = uuid;
         this.fullName = fullName;
+    }
+
+    public void setContacts(ContactType contactType, String value) {
+        contacts.put(contactType, value);
+    }
+
+    public void setSections(SectionType sectionType, Section section) {
+        sections.put(sectionType, section);
+    }
+
+    public String getContacts(ContactType contactType) {
+        return contacts.get(contactType);
+    }
+
+    public Section getSections(SectionType sectionType) {
+        return sections.get(sectionType);
     }
 
     public String getUuid() {
@@ -44,10 +61,23 @@ public class Resume implements Comparable<Resume>{
 
     @Override
     public String toString() {
-        return "Resume{" +
-                "fullName='" + fullName + '\'' +
-                ", uuid='" + uuid + '\'' +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder(fullName);
+
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            stringBuilder.append("\n");
+            stringBuilder.append(entry.getKey().getTitle());
+            stringBuilder.append(": ");
+            stringBuilder.append(entry.getValue());
+        }
+
+        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            stringBuilder.append("\n");
+            stringBuilder.append(entry.getKey().getTitle());
+            stringBuilder.append(": ");
+            stringBuilder.append(entry.getValue());
+        }
+
+        return stringBuilder.toString();
     }
 
     @Override
