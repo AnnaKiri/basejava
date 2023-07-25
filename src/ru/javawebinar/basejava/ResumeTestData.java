@@ -28,13 +28,11 @@ public class ResumeTestData {
         resume.setContacts(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         resume.setContacts(ContactType.HOME_PAGE, "http://gkislin.ru/");
 
-        TextSection textSection = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
-        resume.setSections(SectionType.OBJECTIVE, textSection);
+        TextSection textSectionObjective = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        resume.setSections(SectionType.OBJECTIVE, textSectionObjective);
 
-        List<String> listTextSectionPersonal = new ArrayList<>();
-        listTextSectionPersonal.add("Аналитический склад ума, сильная логика, креативность, инициативность.");
-        listTextSectionPersonal.add("Пурист кода и архитектуры");
-        resume.setSections(SectionType.PERSONAL, new ListTextSection(listTextSectionPersonal));
+        TextSection textSectionPersonal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        resume.setSections(SectionType.PERSONAL, textSectionPersonal);
 
         List<String> listTextSectionAchievement = new ArrayList<>();
         listTextSectionAchievement.add("Организация команды и успешная реализация Java проектов для сторонних заказчиков: приложения автопарк на стеке Spring Cloud/микросервисы, система мониторинга показателей спортсменов на Spring Boot, участие в проекте МЭШ на Play-2, многомодульный Spring Boot + Vaadin проект для комплексных DIY смет");
