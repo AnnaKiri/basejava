@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ResumeTestData {
 
-    private static final boolean USE_TOSTRING = true;
+    private static final boolean USE_TOSTRING = false;
 
     public static void main(String[] args) {
         Resume resume = getExampleResume();
@@ -111,13 +111,10 @@ public class ResumeTestData {
     private static void printResume(Resume resume) {
         System.out.println(resume.getFullName());
 
-        System.out.println(ContactType.PHONE_NUMBER.getTitle() + ": " + resume.getContacts(ContactType.PHONE_NUMBER));
-        System.out.println(ContactType.SKYPE.getTitle() + ": " + resume.getContacts(ContactType.SKYPE));
-        System.out.println(ContactType.EMAIL.getTitle() + ": " + resume.getContacts(ContactType.EMAIL));
-        System.out.println(ContactType.LINKEDIN.getTitle() + ": " + resume.getContacts(ContactType.LINKEDIN));
-        System.out.println(ContactType.GITHUB.getTitle() + ": " + resume.getContacts(ContactType.GITHUB));
-        System.out.println(ContactType.STACKOVERFLOW.getTitle() + ": " + resume.getContacts(ContactType.STACKOVERFLOW));
-        System.out.println(ContactType.HOME_PAGE.getTitle() + ": " + resume.getContacts(ContactType.HOME_PAGE) + "\n");
+        for (ContactType type : ContactType.values()) {
+            System.out.println(type.getTitle() + ": " + resume.getContacts(type));
+        }
+        System.out.println();
 
         System.out.println(SectionType.OBJECTIVE.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.OBJECTIVE)).getDescription() + "\n");
         System.out.println(SectionType.PERSONAL.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.PERSONAL)).getDescription() + "\n");
