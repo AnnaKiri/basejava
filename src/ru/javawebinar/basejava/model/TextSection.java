@@ -9,6 +9,10 @@ public class TextSection extends Section {
         this.description = description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -24,6 +28,6 @@ public class TextSection extends Section {
 
     @Override
     public String toString() {
-        return description;
+        return "\n" + description + "\n";
     }
 }

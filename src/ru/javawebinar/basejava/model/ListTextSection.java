@@ -10,6 +10,10 @@ public class ListTextSection extends Section {
         this.stringList = stringList;
     }
 
+    public List<String> getStringList() {
+        return stringList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -25,6 +29,13 @@ public class ListTextSection extends Section {
 
     @Override
     public String toString() {
-        return stringList.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String list : stringList) {
+            stringBuilder.append("\n");
+            stringBuilder.append("• ");
+            stringBuilder.append(list);
+        }
+        stringBuilder.append("\n");
+        return  stringBuilder.toString();
     }
 }

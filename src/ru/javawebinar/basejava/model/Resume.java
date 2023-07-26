@@ -69,6 +69,7 @@ public class Resume implements Comparable<Resume>{
             stringBuilder.append(": ");
             stringBuilder.append(entry.getValue());
         }
+        stringBuilder.append("\n");
 
         for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             stringBuilder.append("\n");

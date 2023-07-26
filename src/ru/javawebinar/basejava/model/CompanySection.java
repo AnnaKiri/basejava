@@ -10,6 +10,10 @@ public class CompanySection extends Section {
         this.companyList = organizationList;
     }
 
+    public List<Company> getCompanyList() {
+        return companyList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -25,6 +29,13 @@ public class CompanySection extends Section {
 
     @Override
     public String toString() {
-        return companyList.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Company list : companyList) {
+            stringBuilder.append("\n");
+            stringBuilder.append("• ");
+            stringBuilder.append(list);
+        }
+        stringBuilder.append("\n");
+        return  stringBuilder.toString();
     }
 }

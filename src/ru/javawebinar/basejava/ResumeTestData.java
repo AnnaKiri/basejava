@@ -6,9 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResumeTestData {
+
+    private static final boolean USE_TOSTRING = true;
+
     public static void main(String[] args) {
         Resume resume = getExampleResume();
-        System.out.println(resume);
+
+        if (USE_TOSTRING) {
+            System.out.println(resume);
+        } else {
+            printResume(resume);
+        }
     }
 
     private static List<Period> fillPeriodList(String startTime, String endTime, String position, String description) {
@@ -98,5 +106,61 @@ public class ResumeTestData {
         resume.setSections(SectionType.EDUCATION, new CompanySection(companyList));
 
         return resume;
+    }
+
+    private static void printResume(Resume resume) {
+        System.out.println(resume.getFullName());
+
+        System.out.println(ContactType.PHONE_NUMBER.getTitle() + ": " + resume.getContacts(ContactType.PHONE_NUMBER));
+        System.out.println(ContactType.SKYPE.getTitle() + ": " + resume.getContacts(ContactType.SKYPE));
+        System.out.println(ContactType.EMAIL.getTitle() + ": " + resume.getContacts(ContactType.EMAIL));
+        System.out.println(ContactType.LINKEDIN.getTitle() + ": " + resume.getContacts(ContactType.LINKEDIN));
+        System.out.println(ContactType.GITHUB.getTitle() + ": " + resume.getContacts(ContactType.GITHUB));
+        System.out.println(ContactType.STACKOVERFLOW.getTitle() + ": " + resume.getContacts(ContactType.STACKOVERFLOW));
+        System.out.println(ContactType.HOME_PAGE.getTitle() + ": " + resume.getContacts(ContactType.HOME_PAGE) + "\n");
+
+        System.out.println(SectionType.OBJECTIVE.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.OBJECTIVE)).getDescription() + "\n");
+        System.out.println(SectionType.PERSONAL.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.PERSONAL)).getDescription() + "\n");
+
+        List<String> listAchievement = ((ListTextSection) resume.getSections(SectionType.ACHIEVEMENT)).getStringList();
+        System.out.println(SectionType.ACHIEVEMENT.getTitle() + ": ");
+        for (String line : listAchievement) {
+            System.out.println("• " + line);
+        }
+        System.out.println();
+
+        List<String> listQualification = ((ListTextSection) resume.getSections(SectionType.QUALIFICATIONS)).getStringList();
+        System.out.println(SectionType.QUALIFICATIONS.getTitle() + ": ");
+        for (String line : listQualification) {
+            System.out.println("• " + line);
+        }
+        System.out.println();
+
+        List<Company> listExperience = ((CompanySection) resume.getSections(SectionType.EXPERIENCE)).getCompanyList();
+        System.out.println(SectionType.EXPERIENCE.getTitle() + ": ");
+        for (Company organization : listExperience) {
+            for (Period period : organization.getPeriods()) {
+                System.out.println(
+                        period.getStartTime() + "-" + period.getEndTime() +
+                                " " + organization.getCompany() +
+                                " " + organization.getLink() + " " +
+                                period.getPosition() + " " +
+                                period.getDescription());
+            }
+        }
+        System.out.println();
+
+        List<Company> listEducation = ((CompanySection) resume.getSections(SectionType.EDUCATION)).getCompanyList();
+        System.out.println(SectionType.EDUCATION.getTitle() + ": ");
+        for (Company organization : listEducation) {
+            for (Period period : organization.getPeriods()) {
+                System.out.println(
+                        period.getStartTime() + "-" + period.getEndTime() +
+                                " " + organization.getCompany() +
+                                " " + organization.getLink() + " " +
+                                period.getPosition() + " " +
+                                period.getDescription());
+            }
+        }
     }
 }
