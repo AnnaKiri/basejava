@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,28 +30,40 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume resume, File file) {
-// примерно то же самое что и в create, только не надо создавать файл, а написать doWrite
+        try {
+            doWrite(resume, file);
+        } catch (IOException e) {
+            throw new StorageException("File could not be updated", file.getName(), e);
+        }
     }
 
     @Override
     protected void doSave(Resume resume, File file) {
         try {
-            file.createNewFile();
-            doWrite(resume, file);
+            if (file.createNewFile()) {
+                doWrite(resume, file);
+            } else {
+                throw new StorageException("File already exist", file.getName());
+            }
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File could not be saved", file.getName(), e);
         }
     }
 
     @Override
-    protected Resume doGet(File searchKey) {
-//        нужен абстрактый метод который читает резюме из файла doRead
-        return null;
+    protected Resume doGet(File file) {
+        try {
+            return doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("File could not be read", file.getName(), e);
+        }
     }
 
     @Override
     protected void doDelete(File file) {
-
+        if (!file.delete()) {
+            throw new StorageException("File could not be delete", file.getName());
+        }
     }
 
     @Override
@@ -60,22 +73,40 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getList() {
-// читает резюме из каталога, метод тот же doRead, пока не реализовывать doRead
-
-        return null;
+        File[] files = directory.listFiles();
+        List<Resume> list = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    list.add(doRead(file));
+                } catch (IOException e) {
+                    throw new StorageException("File could not be read", file.getName(), e);
+                }
+            }
+        }
+        return list;
     }
 
     @Override
     public void clear() {
-// получить и удалить из каталога все резюме
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                doDelete(file);
+            }
+        }
     }
 
     @Override
     public int size() {
-//        посчитать количество сколько файлов в каталоге
-        return 0;
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw  new StorageException("Directory is empty", null);
+        }
+        return files.length;
     }
 
     protected abstract void doWrite(Resume resume, File file) throws IOException;
 
+    protected abstract Resume doRead(File file) throws IOException;
 }
