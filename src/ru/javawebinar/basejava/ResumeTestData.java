@@ -2,12 +2,13 @@ package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResumeTestData {
 
-    private static final boolean USE_TOSTRING = false;
+    private static final boolean USE_TOSTRING = true;
 
     public static void main(String[] args) {
         Resume resume = getExampleResume();
@@ -19,9 +20,9 @@ public class ResumeTestData {
         }
     }
 
-    private static List<Period> fillPeriodList(String startTime, String endTime, String position, String description) {
+    private static List<Period> fillPeriodList(LocalDate startDate, LocalDate endDate, String position, String description) {
         List<Period> periodList = new ArrayList<>();
-        periodList.add(new Period(startTime, endTime, position, description));
+        periodList.add(new Period(startDate, endDate, position, description));
         return periodList;
     }
 
@@ -69,14 +70,14 @@ public class ResumeTestData {
         listTextSectionQualifications.add("Родной русский, английский \"upper intermediate\"");
         resume.setSections(SectionType.QUALIFICATIONS, new ListTextSection(listTextSectionQualifications));
 
-        Company company1 = new Company(fillPeriodList("10/2013", "Сейчас", "Автор проекта", "Создание, организация и проведение Java онлайн проектов и стажировок."), "Java Online Projects", "https://javaops.ru/");
-        Company company2 = new Company(fillPeriodList("10/2014", "01/2016", "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."), "Wrike", "https://www.wrike.com/");
-        Company company3 = new Company(fillPeriodList("04/2012", "10/2014", "Java архитектор", "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"), "RIT Center", "");
-        Company company4 = new Company(fillPeriodList("12/2010", "04/2012", "Ведущий программист", "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."), "Luxoft (Deutsche Bank)", "http://www.luxoft.ru/");
-        Company company5 = new Company(fillPeriodList("06/2008", "12/2010", "Ведущий специалист", "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"), "Yota", "https://www.yota.ru/?utm_source=cityads&utm_medium=cpa&utm_campaign=2Keh&utm_term=8y6Z204JHXZt7YU&utm_content=8y6Z204JHXZt7YU&click_id=8y6Z204JHXZt7YU");
-        Company company6 = new Company(fillPeriodList("03/2007", "06/2008", "Разработчик ПО", "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining)."), "Enkata", "http://enkata.com/");
-        Company company7 = new Company(fillPeriodList("01/2005", "02/2007", "Разработчик ПО", "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix)."), "Siemens AG", "https://www.siemens.com/global/en.html");
-        Company company8 = new Company(fillPeriodList("09/1997", "01/2005", "Инженер по аппаратному и программному тестированию", "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."), "Alcatel", "http://www.alcatel.ru/");
+        Company company1 = new Company(fillPeriodList(LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта", "Создание, организация и проведение Java онлайн проектов и стажировок."), "Java Online Projects", "https://javaops.ru/");
+        Company company2 = new Company(fillPeriodList(LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."), "Wrike", "https://www.wrike.com/");
+        Company company3 = new Company(fillPeriodList(LocalDate.of(2012, 4, 1), LocalDate.of(2014, 10, 1), "Java архитектор", "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"), "RIT Center", "");
+        Company company4 = new Company(fillPeriodList(LocalDate.of(2010, 12, 1), LocalDate.of(2012, 4, 1), "Ведущий программист", "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."), "Luxoft (Deutsche Bank)", "http://www.luxoft.ru/");
+        Company company5 = new Company(fillPeriodList(LocalDate.of(2008, 6, 1), LocalDate.of(2010, 12, 1), "Ведущий специалист", "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"), "Yota", "https://www.yota.ru/?utm_source=cityads&utm_medium=cpa&utm_campaign=2Keh&utm_term=8y6Z204JHXZt7YU&utm_content=8y6Z204JHXZt7YU&click_id=8y6Z204JHXZt7YU");
+        Company company6 = new Company(fillPeriodList(LocalDate.of(2007, 3, 1), LocalDate.of(2008, 6, 1), "Разработчик ПО", "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining)."), "Enkata", "http://enkata.com/");
+        Company company7 = new Company(fillPeriodList(LocalDate.of(2005, 1, 1), LocalDate.of(2007, 2, 1), "Разработчик ПО", "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix)."), "Siemens AG", "https://www.siemens.com/global/en.html");
+        Company company8 = new Company(fillPeriodList(LocalDate.of(1997, 9, 1), LocalDate.of(2005, 1, 1), "Инженер по аппаратному и программному тестированию", "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."), "Alcatel", "http://www.alcatel.ru/");
         List<Company> companyList = new ArrayList<>();
         companyList.add(company1);
         companyList.add(company2);
@@ -88,13 +89,13 @@ public class ResumeTestData {
         companyList.add(company8);
         resume.setSections(SectionType.EXPERIENCE, new CompanySection(companyList));
 
-        Company education1 = new Company(fillPeriodList("03/2013", "05/2013", "'Functional Programming Principles in Scala' by Martin Odersky", ""), "Coursera", "https://www.coursera.org/?irclickid=3Ky1XPVyPxyNTOQ2vSxwRRtOUkFwnRwPeUDdXA0&irgwc=1&utm_medium=partners&utm_source=impact&utm_campaign=1301558&utm_content=b2c");
-        Company education2 = new Company(fillPeriodList("03/2011", "04/2011", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""), "Luxoft", "http://www.luxoft.ru/");
-        Company education3 = new Company(fillPeriodList("01/2005", "04/2005", "3 месяца обучения мобильным IN сетям (Берлин)", ""), "Siemens AG", "https://www.siemens.com/global/en.html");
-        Company education4 = new Company(fillPeriodList("09/1997", "03/1998", "6 месяцев обучения цифровым телефонным сетям (Москва)", ""), "Alcatel", "http://www.alcatel.ru/");
-        Company education5 = new Company(fillPeriodList("09/1993", "07/1996", "Аспирантура (программист С, С++)", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
-        Company education6 = new Company(fillPeriodList("09/1987", "07/1993", "Инженер (программист Fortran, C)", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
-        Company education7 = new Company(fillPeriodList("09/1984", "06/1987", "Закончил с отличием", ""), "Заочная физико-техническая школа при МФТИ", "https://mipt.ru/");
+        Company education1 = new Company(fillPeriodList(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1), "'Functional Programming Principles in Scala' by Martin Odersky", ""), "Coursera", "https://www.coursera.org/?irclickid=3Ky1XPVyPxyNTOQ2vSxwRRtOUkFwnRwPeUDdXA0&irgwc=1&utm_medium=partners&utm_source=impact&utm_campaign=1301558&utm_content=b2c");
+        Company education2 = new Company(fillPeriodList(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 1), "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""), "Luxoft", "http://www.luxoft.ru/");
+        Company education3 = new Company(fillPeriodList(LocalDate.of(2005, 1, 1), LocalDate.of(2005, 4, 1), "3 месяца обучения мобильным IN сетям (Берлин)", ""), "Siemens AG", "https://www.siemens.com/global/en.html");
+        Company education4 = new Company(fillPeriodList(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 1), "6 месяцев обучения цифровым телефонным сетям (Москва)", ""), "Alcatel", "http://www.alcatel.ru/");
+        Company education5 = new Company(fillPeriodList(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
+        Company education6 = new Company(fillPeriodList(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
+        Company education7 = new Company(fillPeriodList(LocalDate.of(1984, 9, 1), LocalDate.of(1987, 6, 1), "Закончил с отличием", ""), "Заочная физико-техническая школа при МФТИ", "https://mipt.ru/");
         companyList = new ArrayList<>();
         companyList.add(education1);
         companyList.add(education2);
@@ -119,42 +120,48 @@ public class ResumeTestData {
         System.out.println(SectionType.OBJECTIVE.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.OBJECTIVE)).getDescription() + "\n");
         System.out.println(SectionType.PERSONAL.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.PERSONAL)).getDescription() + "\n");
 
-        List<String> listAchievement = ((ListTextSection) resume.getSections(SectionType.ACHIEVEMENT)).getStringList();
+        List<String> listAchievement = ((ListTextSection) resume.getSections(SectionType.ACHIEVEMENT)).getStrings();
         System.out.println(SectionType.ACHIEVEMENT.getTitle() + ": ");
         for (String line : listAchievement) {
             System.out.println("• " + line);
         }
         System.out.println();
 
-        List<String> listQualification = ((ListTextSection) resume.getSections(SectionType.QUALIFICATIONS)).getStringList();
+        List<String> listQualification = ((ListTextSection) resume.getSections(SectionType.QUALIFICATIONS)).getStrings();
         System.out.println(SectionType.QUALIFICATIONS.getTitle() + ": ");
         for (String line : listQualification) {
             System.out.println("• " + line);
         }
         System.out.println();
 
-        List<Company> listExperience = ((CompanySection) resume.getSections(SectionType.EXPERIENCE)).getCompanyList();
+        List<Company> listExperience = ((CompanySection) resume.getSections(SectionType.EXPERIENCE)).getCompanies();
         System.out.println(SectionType.EXPERIENCE.getTitle() + ": ");
         for (Company organization : listExperience) {
             for (Period period : organization.getPeriods()) {
                 System.out.println(
-                        period.getStartTime() + "-" + period.getEndTime() +
-                                " " + organization.getCompany() +
-                                " " + organization.getLink() + " " +
+                        period.getStartDate().getMonthValue() + "/"
+                                + period.getStartDate().getYear()
+                                + "-" + period.getEndDate().getMonthValue() + "/"
+                                + period.getEndDate().getYear() +
+                                " " + organization.getName() +
+                                " " + organization.getWebsite() + " " +
                                 period.getPosition() + " " +
                                 period.getDescription());
             }
         }
         System.out.println();
 
-        List<Company> listEducation = ((CompanySection) resume.getSections(SectionType.EDUCATION)).getCompanyList();
+        List<Company> listEducation = ((CompanySection) resume.getSections(SectionType.EDUCATION)).getCompanies();
         System.out.println(SectionType.EDUCATION.getTitle() + ": ");
         for (Company organization : listEducation) {
             for (Period period : organization.getPeriods()) {
                 System.out.println(
-                        period.getStartTime() + "-" + period.getEndTime() +
-                                " " + organization.getCompany() +
-                                " " + organization.getLink() + " " +
+                        period.getStartDate().getMonthValue() + "/"
+                                + period.getStartDate().getYear()
+                                + "-" + period.getEndDate().getMonthValue() + "/"
+                                + period.getEndDate().getYear() +
+                                " " + organization.getName() +
+                                " " + organization.getWebsite() + " " +
                                 period.getPosition() + " " +
                                 period.getDescription());
             }

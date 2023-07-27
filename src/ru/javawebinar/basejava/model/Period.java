@@ -1,26 +1,27 @@
 package ru.javawebinar.basejava.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Period {
-    private final String startTime;
-    private final String endTime;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
     private final String position;
     private final String description;
 
-    public Period(String startTime, String endTime, String position, String description) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public Period(LocalDate startTime, LocalDate endTime, String position, String description) {
+        this.startDate = startTime;
+        this.endDate = endTime;
         this.position = position;
         this.description = description;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
     public String getPosition() {
@@ -36,18 +37,20 @@ public class Period {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Period period = (Period) o;
-        return Objects.equals(startTime, period.startTime) && Objects.equals(endTime, period.endTime) && Objects.equals(position, period.position) && Objects.equals(description, period.description);
+        return Objects.equals(startDate, period.startDate) && Objects.equals(endDate, period.endDate) && Objects.equals(position, period.position) && Objects.equals(description, period.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startTime, endTime, position, description);
+        return Objects.hash(startDate, endDate, position, description);
     }
 
     @Override
     public String toString() {
-        return startTime +
-                "-" + endTime + " "
+        return startDate.getMonthValue() + "/"
+                + startDate.getYear() +
+                "-" + endDate.getMonthValue() + "/"
+                + endDate.getYear() + " "
                 + position + " "
                 + description;
     }

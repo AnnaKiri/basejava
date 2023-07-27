@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListTextSection extends Section {
-    private final List<String> stringList;
+    private final List<String> strings;
 
     public ListTextSection(List<String> stringList) {
-        this.stringList = stringList;
+        this.strings = stringList;
     }
 
-    public List<String> getStringList() {
-        return stringList;
+    public List<String> getStrings() {
+        return strings;
     }
 
     @Override
@@ -19,18 +19,18 @@ public class ListTextSection extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListTextSection that = (ListTextSection) o;
-        return Objects.equals(stringList, that.stringList);
+        return Objects.equals(strings, that.strings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stringList);
+        return Objects.hash(strings);
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String list : stringList) {
+        for (String list : strings) {
             stringBuilder.append("\n");
             stringBuilder.append("• ");
             stringBuilder.append(list);

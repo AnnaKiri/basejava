@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class CompanySection extends Section {
-    private final List<Company> companyList;
+    private final List<Company> companies;
 
     public CompanySection(List<Company> organizationList) {
-        this.companyList = organizationList;
+        this.companies = organizationList;
     }
 
-    public List<Company> getCompanyList() {
-        return companyList;
+    public List<Company> getCompanies() {
+        return companies;
     }
 
     @Override
@@ -19,18 +19,18 @@ public class CompanySection extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompanySection that = (CompanySection) o;
-        return Objects.equals(companyList, that.companyList);
+        return Objects.equals(companies, that.companies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyList);
+        return Objects.hash(companies);
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Company list : companyList) {
+        for (Company list : companies) {
             stringBuilder.append("\n");
             stringBuilder.append("• ");
             stringBuilder.append(list);
