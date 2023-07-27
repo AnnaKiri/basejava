@@ -11,7 +11,7 @@ public class ResumeTestData {
     private static final boolean USE_TOSTRING = true;
 
     public static void main(String[] args) {
-        Resume resume = getExampleResume();
+        Resume resume = getExampleResume("uuid1", "Григорий Кислин");
 
         if (USE_TOSTRING) {
             System.out.println(resume);
@@ -26,8 +26,8 @@ public class ResumeTestData {
         return periodList;
     }
 
-    private static Resume getExampleResume() {
-        Resume resume = new Resume("Григорий Кислин");
+    public static Resume getExampleResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
 
         resume.setContacts(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         resume.setContacts(ContactType.SKYPE, "skype:grigory.kislin");
