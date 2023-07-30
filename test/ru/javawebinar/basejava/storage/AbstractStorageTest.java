@@ -25,10 +25,10 @@ public class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = ResumeTestData.getExampleResume(UUID_1, "Name1");
-        RESUME_2 = ResumeTestData.getExampleResume(UUID_2, "Name2");
-        RESUME_3 = ResumeTestData.getExampleResume(UUID_3, "Name3");
-        RESUME_4 = ResumeTestData.getExampleResume(UUID_4, "Name4");
+        RESUME_1 = ResumeTestData.createFilledResume(UUID_1, "Name1");
+        RESUME_2 = ResumeTestData.createFilledResume(UUID_2, "Name2");
+        RESUME_3 = ResumeTestData.createFilledResume(UUID_3, "Name3");
+        RESUME_4 = ResumeTestData.createFilledResume(UUID_4, "Name4");
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -57,7 +57,7 @@ public class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume resume = ResumeTestData.getExampleResume(UUID_2, "Name2");
+        Resume resume = ResumeTestData.createFilledResume(UUID_2, "Name2");
         storage.update(resume);
         Assert.assertEquals(resume, storage.get(UUID_2));
     }
