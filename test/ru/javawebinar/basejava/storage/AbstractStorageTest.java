@@ -13,7 +13,8 @@ import java.util.List;
 
 public class AbstractStorageTest {
 
-    protected static final File STORAGE_DIR = new File("C:\\IntelliJ IDEA workspace\\basejava\\storage");
+    protected static final String PATH = "C:\\IntelliJ IDEA workspace\\basejava\\storage";
+    protected static final File STORAGE_DIR = new File(PATH);
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";

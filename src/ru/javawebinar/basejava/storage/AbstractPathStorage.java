@@ -7,10 +7,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private final Path directory;
@@ -24,62 +22,59 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected boolean isExist(Path file) {
-        return file.exists();
+    protected boolean isExist(Path path) {
+        return Files.exists(path);
     }
 
     @Override
-    protected void doUpdate(Resume resume, Path file) {
+    protected void doUpdate(Resume resume, Path path) {
         try {
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File could not be updated", file.getName(), e);
+            throw new StorageException("File could not be updated", path.toString(), e);
         }
     }
 
     @Override
-    protected void doSave(Resume resume, Path file) {
+    protected void doSave(Resume resume, Path path) {
         try {
-            file.createNewFile();
+            Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("File could not be saved", file.getName(), e);
+            throw new StorageException("File could not be saved", path.toString(), e);
         }
-        doUpdate(resume, file);
+        doUpdate(resume, path);
     }
 
     @Override
-    protected Resume doGet(Path file) {
+    protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(file)));
+            return doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File could not be read", file.getName(), e);
+            throw new StorageException("File could not be read", path.toString(), e);
         }
     }
 
     @Override
-    protected void doDelete(Path file) {
-        if (!file.delete()) {
-            throw new StorageException("File could not be delete", file.getName());
+    protected void doDelete(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new StorageException("File could not be delete", path.toString());
         }
     }
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return new Path(directory, uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
     protected List<Resume> getList() {
-        Path[] paths = directory.listFiles();
-        List<Resume> list = new ArrayList<>();
-        if (paths == null) {
-            throw new StorageException("Directory is empty", null);
-        } else {
-            for (Path path : paths) {
-                list.add(doGet(path));
-            }
+        try {
+            return Files.list(directory).map(this::doGet).toList();
+        } catch (IOException e) {
+            throw new StorageException("Error accessing folder", null);
         }
-        return list;
     }
 
     @Override
@@ -93,11 +88,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory is empty", null);
+        try {
+            return (int)Files.list(directory).count();
+        } catch (IOException e) {
+            throw new StorageException("Error accessing folder", null);
         }
-        return files.length;
     }
 
     protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
