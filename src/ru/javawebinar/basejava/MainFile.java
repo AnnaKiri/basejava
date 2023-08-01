@@ -31,23 +31,25 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        printAllFileNames(dir);
+        printAllFileNames(dir, "");
     }
 
-    public static void printAllFileNames(File directory) {
+    public static void printAllFileNames(File directory, String offset) {
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
             if(files != null) {
                 for (File file : files) {
                     if (file.isDirectory()) {
-                        System.out.println(file.getName());
-                        printAllFileNames(file);
-                    } else {
-                        System.out.println(file.getName());
+                        System.out.println(offset + file.getName());
+                        printAllFileNames(file, offset + "\t");
+                    }
+                }
+                for (File file : files) {
+                    if (file.isFile()) {
+                        System.out.println(offset + file.getName());
                     }
                 }
             }
         }
-
     }
 }
