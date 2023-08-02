@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.serializationStrategy.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -71,36 +72,31 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getList() {
-        File[] files = directory.listFiles();
         List<Resume> list = new ArrayList<>();
-        if (files == null) {
-            throw new StorageException("Directory is empty", null);
-        } else {
-            for (File file : files) {
-                list.add(doGet(file));
-            }
+        for (File file : getFiles()) {
+            list.add(doGet(file));
         }
         return list;
     }
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory is empty", null);
-        } else {
-            for (File file : files) {
-                doDelete(file);
-            }
+        for (File file : getFiles()) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
+        return getFiles().length;
+    }
+
+    private File[] getFiles() {
         File[] files = directory.listFiles();
-        if (files == null) {
+        if (files != null) {
+            return files;
+        } else {
             throw new StorageException("Directory is empty", null);
         }
-        return files.length;
     }
 }
