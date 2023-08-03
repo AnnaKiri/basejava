@@ -1,15 +1,21 @@
 package ru.javawebinar.basejava.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final List<Period> periods;
-    private final String name;
-    private final String website;
+    private List<Period> periods;
+    private String name;
+    private String website;
+
+    public Company() {
+    }
 
     public Company(List<Period> periods, String company, String link) {
         this.periods = periods;

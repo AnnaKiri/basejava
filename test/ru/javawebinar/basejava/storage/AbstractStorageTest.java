@@ -63,7 +63,7 @@ public class AbstractStorageTest {
     public void update() throws Exception {
         Resume resume = ResumeTestData.createFilledResume(UUID_2, "Name2");
         storage.update(resume);
-        Assert.assertEquals(resume, storage.get(UUID_2));
+        Assert.assertTrue(resume.equals(storage.get(UUID_2)));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -113,7 +113,7 @@ public class AbstractStorageTest {
     }
 
     public void assertGet(Resume resume) {
-        Assert.assertEquals(resume, storage.get(resume.getUuid()));
+        Assert.assertTrue(resume.equals(storage.get(resume.getUuid())));
     }
 
 }

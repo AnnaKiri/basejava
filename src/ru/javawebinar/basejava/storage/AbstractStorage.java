@@ -17,14 +17,14 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public void update(Resume resume) {
-        LOG.info("Update " + resume);
+        LOG.info("Update " + resume.getUuid());
         SK searchKey = getExistingSearchKey(resume.getUuid());
         doUpdate(resume, searchKey);
     }
 
     @Override
     public void save(Resume resume) {
-        LOG.info("Save " + resume);
+        LOG.info("Save " + resume.getUuid());
         SK searchKey = getNotExistingSearchKey(resume.getUuid());
         doSave(resume, searchKey);
     }

@@ -6,7 +6,10 @@ import java.util.Objects;
 public class ListTextSection extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final List<String> strings;
+    private List<String> strings;
+
+    public ListTextSection() {
+    }
 
     public ListTextSection(List<String> stringList) {
         this.strings = stringList;
