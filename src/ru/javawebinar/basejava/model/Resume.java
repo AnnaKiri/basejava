@@ -44,12 +44,20 @@ public class Resume implements Comparable<Resume>, Serializable {
         sections.put(sectionType, section);
     }
 
-    public String getContacts(ContactType contactType) {
+    public String getContact(ContactType contactType) {
         return contacts.get(contactType);
     }
 
-    public Section getSections(SectionType sectionType) {
+    public Section getSection(SectionType sectionType) {
         return sections.get(sectionType);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
     }
 
     public String getUuid() {

@@ -113,28 +113,28 @@ public class ResumeTestData {
         System.out.println(resume.getFullName());
 
         for (ContactType type : ContactType.values()) {
-            System.out.println(type.getTitle() + ": " + resume.getContacts(type));
+            System.out.println(type.getTitle() + ": " + resume.getContact(type));
         }
         System.out.println();
 
-        System.out.println(SectionType.OBJECTIVE.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.OBJECTIVE)).getDescription() + "\n");
-        System.out.println(SectionType.PERSONAL.getTitle() + ": " + "\n" + ((TextSection) resume.getSections(SectionType.PERSONAL)).getDescription() + "\n");
+        System.out.println(SectionType.OBJECTIVE.getTitle() + ": " + "\n" + ((TextSection) resume.getSection(SectionType.OBJECTIVE)).getDescription() + "\n");
+        System.out.println(SectionType.PERSONAL.getTitle() + ": " + "\n" + ((TextSection) resume.getSection(SectionType.PERSONAL)).getDescription() + "\n");
 
-        List<String> listAchievement = ((ListTextSection) resume.getSections(SectionType.ACHIEVEMENT)).getStrings();
+        List<String> listAchievement = ((ListTextSection) resume.getSection(SectionType.ACHIEVEMENT)).getStrings();
         System.out.println(SectionType.ACHIEVEMENT.getTitle() + ": ");
         for (String line : listAchievement) {
             System.out.println("• " + line);
         }
         System.out.println();
 
-        List<String> listQualification = ((ListTextSection) resume.getSections(SectionType.QUALIFICATIONS)).getStrings();
+        List<String> listQualification = ((ListTextSection) resume.getSection(SectionType.QUALIFICATIONS)).getStrings();
         System.out.println(SectionType.QUALIFICATIONS.getTitle() + ": ");
         for (String line : listQualification) {
             System.out.println("• " + line);
         }
         System.out.println();
 
-        List<Company> listExperience = ((CompanySection) resume.getSections(SectionType.EXPERIENCE)).getCompanies();
+        List<Company> listExperience = ((CompanySection) resume.getSection(SectionType.EXPERIENCE)).getCompanies();
         System.out.println(SectionType.EXPERIENCE.getTitle() + ": ");
         for (Company organization : listExperience) {
             for (Period period : organization.getPeriods()) {
@@ -151,7 +151,7 @@ public class ResumeTestData {
         }
         System.out.println();
 
-        List<Company> listEducation = ((CompanySection) resume.getSections(SectionType.EDUCATION)).getCompanies();
+        List<Company> listEducation = ((CompanySection) resume.getSection(SectionType.EDUCATION)).getCompanies();
         System.out.println(SectionType.EDUCATION.getTitle() + ": ");
         for (Company organization : listEducation) {
             for (Period period : organization.getPeriods()) {
