@@ -1,9 +1,12 @@
 package ru.javawebinar.basejava.storage.serializationStrategy;
 
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerializer implements SerializationStrategy {
@@ -12,6 +15,7 @@ public class DataStreamSerializer implements SerializationStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
+
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
@@ -19,22 +23,111 @@ public class DataStreamSerializer implements SerializationStrategy {
                 dos.writeUTF(entry.getValue());
             }
 
-//            TODO implement section
+            Map<SectionType, Section> sections = resume.getSections();
+            dos.writeInt(sections.size());
+            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+
+                SectionType sectionType = entry.getKey();
+
+                dos.writeUTF(sectionType.name());
+
+                switch (sectionType) {
+                    case OBJECTIVE, PERSONAL:
+                        dos.writeUTF(((TextSection)entry.getValue()).getDescription());
+                        break;
+                    case ACHIEVEMENT, QUALIFICATIONS:
+                        ListTextSection listTextSection = (ListTextSection) entry.getValue();
+                        List<String> list = listTextSection.getStrings();
+                        dos.writeInt(list.size());
+                        for (String string : list) {
+                            dos.writeUTF(string);
+                        }
+                        break;
+                    case EXPERIENCE, EDUCATION:
+                        CompanySection companySection = (CompanySection) entry.getValue();
+                        List<Company> companyList = companySection.getCompanies();
+                        dos.writeInt(companyList.size());
+                        for (Company company : companyList) {
+                            List<Period> periodList = company.getPeriods();
+                            dos.writeInt(periodList.size());
+                            for (Period period : periodList) {
+                                dos.writeUTF(period.getStartDate().toString());
+                                dos.writeUTF(period.getEndDate().toString());
+                                dos.writeUTF(period.getPosition());
+                                dos.writeUTF(period.getDescription());
+                            }
+                            dos.writeUTF(company.getName());
+                            dos.writeUTF(company.getWebsite());
+                        }
+                        break;
+                    default:
+                        throw new StorageException("Section " + sectionType + " was not written", null);
+                }
+            }
         }
     }
 
     @Override
     public Resume doRead(InputStream is) throws IOException {
+        Resume resume;
         try (DataInputStream dis = new DataInputStream(is)) {
-            Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            resume = new Resume(dis.readUTF(), dis.readUTF());
+            int contactsSize = dis.readInt();
+            for (int i = 0; i < contactsSize; i++) {
                 resume.setContacts(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
+            int sectionsSize = dis.readInt();
+            for (int i = 0; i < sectionsSize; i++) {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
 
-//            TODO implement section
-            return resume;
+                switch (sectionType) {
+                    case OBJECTIVE, PERSONAL:
+                        TextSection textSection = new TextSection(dis.readUTF());
+                        resume.setSections(sectionType, textSection);
+                        break;
+                    case ACHIEVEMENT, QUALIFICATIONS:
+                        List<String> list = new ArrayList<>();
+                        int listSize = dis.readInt();
+                        for (int l = 0; l < listSize; l++) {
+                            String line = dis.readUTF();
+                            list.add(line);
+                        }
+                        ListTextSection listTextSection = new ListTextSection(list);
+                        resume.setSections(sectionType, listTextSection);
+                        break;
+                    case EXPERIENCE, EDUCATION:
+                        List<Company> companyList = new ArrayList<>();
+                        int companyListSize = dis.readInt();
+                        for (int l = 0; l < companyListSize; l++) {
+
+                            List<Period> periodList = new ArrayList<>();
+                            int periodListSize = dis.readInt();
+                            for (int k = 0; k < periodListSize; k++) {
+                                LocalDate startDate = LocalDate.parse(dis.readUTF());
+                                LocalDate endDate = LocalDate.parse(dis.readUTF());
+                                String position = dis.readUTF();
+                                String description = dis.readUTF();
+                                Period period = new Period(startDate, endDate, position, description);
+
+                                periodList.add(period);
+                            }
+
+                            String name = dis.readUTF();
+                            String website = dis.readUTF();
+                            Company company = new Company(periodList, name, website);
+
+                            companyList.add(company);
+                        }
+
+                        CompanySection companySection = new CompanySection(companyList);
+                        resume.setSections(sectionType, companySection);
+                        break;
+                    default:
+                        throw new StorageException("Section " + sectionType + " can not be read", null);
+                }
+            }
         }
+        return resume;
     }
 }
