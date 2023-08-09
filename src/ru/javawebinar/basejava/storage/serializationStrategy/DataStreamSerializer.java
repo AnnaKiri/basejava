@@ -56,71 +56,57 @@ public class DataStreamSerializer implements SerializationStrategy {
 
     @Override
     public Resume doRead(InputStream is) throws IOException {
-        Resume resume;
         try (DataInputStream dis = new DataInputStream(is)) {
-            resume = new Resume(dis.readUTF(), dis.readUTF());
-            int contactsSize = dis.readInt();
-            for (int i = 0; i < contactsSize; i++) {
-                resume.setContacts(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            Resume resume = new Resume(dis.readUTF(), dis.readUTF());
 
-            int sectionsSize = dis.readInt();
-            for (int i = 0; i < sectionsSize; i++) {
+            fillMap(dis, () -> resume.setContacts(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+
+            fillMap(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
 
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL:
-                        TextSection textSection = new TextSection(dis.readUTF());
-                        resume.setSections(sectionType, textSection);
+                        resume.setSections(sectionType, new TextSection(dis.readUTF()));
                         break;
                     case ACHIEVEMENT, QUALIFICATIONS:
-                        List<String> list = new ArrayList<>();
-                        int listSize = dis.readInt();
-                        for (int l = 0; l < listSize; l++) {
-                            String line = dis.readUTF();
-                            list.add(line);
-                        }
-                        ListTextSection listTextSection = new ListTextSection(list);
-                        resume.setSections(sectionType, listTextSection);
+                        resume.setSections(sectionType, new ListTextSection(readWithException(dis, dis::readUTF)));
                         break;
                     case EXPERIENCE, EDUCATION:
-                        List<Company> companyList = new ArrayList<>();
-                        int companyListSize = dis.readInt();
-                        for (int l = 0; l < companyListSize; l++) {
-
-                            List<Period> periodList = new ArrayList<>();
-                            int periodListSize = dis.readInt();
-                            for (int k = 0; k < periodListSize; k++) {
-                                LocalDate startDate = LocalDate.parse(dis.readUTF());
-                                LocalDate endDate = LocalDate.parse(dis.readUTF());
-                                String position = dis.readUTF();
-                                String description = dis.readUTF();
-                                Period period = new Period(startDate, endDate, position, description);
-
-                                periodList.add(period);
-                            }
-
-                            String name = dis.readUTF();
-                            String website = dis.readUTF();
-                            Company company = new Company(periodList, name, website);
-
-                            companyList.add(company);
-                        }
-
-                        CompanySection companySection = new CompanySection(companyList);
-                        resume.setSections(sectionType, companySection);
+                        resume.setSections(sectionType, new CompanySection(
+                                readWithException(dis, () -> new Company(
+                                        readWithException(dis, () -> new Period(
+                                                LocalDate.parse(dis.readUTF()),
+                                                LocalDate.parse(dis.readUTF()),
+                                                dis.readUTF(),
+                                                dis.readUTF()
+                                        )),
+                                        dis.readUTF(),
+                                        dis.readUTF()
+                                ))
+                        ));
                         break;
                     default:
                         throw new StorageException("Section " + sectionType + " can not be read", null);
                 }
-            }
+            });
+            return resume;
         }
-        return resume;
     }
 
-    @FunctionalInterface
-    private interface ConsumerWrite<T> {
-        void write(T t) throws IOException;
+    private <T> List<T> readWithException(DataInputStream dis, ConsumerRead<T> consumerRead) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(consumerRead.read());
+        }
+        return list;
+    }
+
+    private void fillMap(DataInputStream dis, ConsumerAdd consumerAdd) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            consumerAdd.addItem();
+        }
     }
 
     private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, ConsumerWrite<T> consumerWrite) throws IOException {
@@ -128,5 +114,20 @@ public class DataStreamSerializer implements SerializationStrategy {
         for (T item : collection) {
             consumerWrite.write(item);
         }
+    }
+
+    @FunctionalInterface
+    private interface ConsumerRead<T> {
+        T read() throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface ConsumerAdd<T> {
+        void addItem() throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface ConsumerWrite<T> {
+        void write(T t) throws IOException;
     }
 }
