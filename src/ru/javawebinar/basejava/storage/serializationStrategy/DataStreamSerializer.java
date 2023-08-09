@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,53 +18,39 @@ public class DataStreamSerializer implements SerializationStrategy {
             dos.writeUTF(resume.getFullName());
 
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+
+            writeWithException(dos, contacts.entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
-            Map<SectionType, Section> sections = resume.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-
+            writeWithException(dos, resume.getSections().entrySet(), entry -> {
                 SectionType sectionType = entry.getKey();
-
+                Section section = entry.getValue();
                 dos.writeUTF(sectionType.name());
-
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL:
-                        dos.writeUTF(((TextSection)entry.getValue()).getDescription());
+                        dos.writeUTF((((TextSection) section).getDescription()));
                         break;
                     case ACHIEVEMENT, QUALIFICATIONS:
-                        ListTextSection listTextSection = (ListTextSection) entry.getValue();
-                        List<String> list = listTextSection.getStrings();
-                        dos.writeInt(list.size());
-                        for (String string : list) {
-                            dos.writeUTF(string);
-                        }
+                        writeWithException(dos, ((ListTextSection) section).getStrings(), dos::writeUTF);
                         break;
                     case EXPERIENCE, EDUCATION:
-                        CompanySection companySection = (CompanySection) entry.getValue();
-                        List<Company> companyList = companySection.getCompanies();
-                        dos.writeInt(companyList.size());
-                        for (Company company : companyList) {
-                            List<Period> periodList = company.getPeriods();
-                            dos.writeInt(periodList.size());
-                            for (Period period : periodList) {
+                        writeWithException(dos, ((CompanySection) section).getCompanies(), company -> {
+                            writeWithException(dos, company.getPeriods(), period -> {
                                 dos.writeUTF(period.getStartDate().toString());
                                 dos.writeUTF(period.getEndDate().toString());
                                 dos.writeUTF(period.getPosition());
                                 dos.writeUTF(period.getDescription());
-                            }
+                            });
                             dos.writeUTF(company.getName());
                             dos.writeUTF(company.getWebsite());
-                        }
+                        });
                         break;
                     default:
                         throw new StorageException("Section " + sectionType + " was not written", null);
                 }
-            }
+            });
         }
     }
 
@@ -129,5 +116,17 @@ public class DataStreamSerializer implements SerializationStrategy {
             }
         }
         return resume;
+    }
+
+    @FunctionalInterface
+    private interface ConsumerWrite<T> {
+        void write(T t) throws IOException;
+    }
+
+    private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, ConsumerWrite<T> consumerWrite) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            consumerWrite.write(item);
+        }
     }
 }
