@@ -93,19 +93,19 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    private <T> List<T> readWithException(DataInputStream dis, ConsumerRead<T> consumerRead) throws IOException {
+    private <T> List<T> readWithException(DataInputStream dis, SupplierRead<T> supplierRead) throws IOException {
         int size = dis.readInt();
         List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            list.add(consumerRead.read());
+            list.add(supplierRead.read());
         }
         return list;
     }
 
-    private void fillMap(DataInputStream dis, ConsumerAdd consumerAdd) throws IOException {
+    private void fillMap(DataInputStream dis, ActionAdd actionAdd) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            consumerAdd.addItem();
+            actionAdd.addItem();
         }
     }
 
@@ -117,12 +117,12 @@ public class DataStreamSerializer implements SerializationStrategy {
     }
 
     @FunctionalInterface
-    private interface ConsumerRead<T> {
+    private interface SupplierRead<T> {
         T read() throws IOException;
     }
 
     @FunctionalInterface
-    private interface ConsumerAdd<T> {
+    private interface ActionAdd<T> {
         void addItem() throws IOException;
     }
 
