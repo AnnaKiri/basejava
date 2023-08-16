@@ -1,9 +1,8 @@
 .idea
-out
+/out
 *.iml
 log
-target
-storage
-
-
-
+/target
+/storage
+resumes.properties
+postgresql-42.2.1.jar
