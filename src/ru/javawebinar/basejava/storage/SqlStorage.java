@@ -13,7 +13,7 @@ public class SqlStorage implements Storage {
     public final SqlHelper helper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
-        this.helper = new SqlHelper( () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword) );
+        this.helper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
     @Override
@@ -56,10 +56,6 @@ public class SqlStorage implements Storage {
             ps.execute();
             return null;
         });
-
-//        } catch (SQLException e) {
-//            throw new ExistStorageException(resume.getUuid());
-//        }
     }
 
     @Override
