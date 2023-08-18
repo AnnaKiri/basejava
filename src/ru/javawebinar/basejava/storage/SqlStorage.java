@@ -63,20 +63,22 @@ public class SqlStorage implements Storage {
         helper.execute("DELETE FROM resume WHERE uuid = ?", uuid, ps -> {
             ps.setString(1, uuid);
             ps.executeUpdate();
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
             return null;
         });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return helper.execute("SELECT * FROM resume", null, ps -> {
+        return helper.execute("SELECT * FROM resume ORDER BY full_name, uuid", null, ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> list = new ArrayList<>();
             while (rs.next()) {
                 Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
                 list.add(resume);
             }
-            list.sort(Resume.RESUME_COMPARATOR);
             return list;
         });
     }
