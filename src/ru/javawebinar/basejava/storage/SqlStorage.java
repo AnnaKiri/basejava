@@ -56,7 +56,8 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
-            saveContacts(conn, resume, "UPDATE contact SET type = ?, value = ? WHERE resume_uuid = ?");
+            deleteContacts(resume);
+            saveContacts(conn, resume);
             return null;
         });
 
@@ -70,7 +71,7 @@ public class SqlStorage implements Storage {
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
-            saveContacts(conn, resume, "INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)");
+            saveContacts(conn, resume);
             return null;
         });
     }
@@ -131,8 +132,16 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void saveContacts(Connection conn, Resume resume, String sql) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    private void deleteContacts(Resume resume) {
+        helper.execute("DELETE FROM contact WHERE resume_uuid = ?", null, ps -> {
+            ps.setString(1, resume.getUuid());
+            ps.execute();
+            return null;
+        });
+    }
+
+    private void saveContacts(Connection conn, Resume resume) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, e.getKey().name());
