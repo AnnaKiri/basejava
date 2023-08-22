@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
@@ -8,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     public final SqlHelper helper;
@@ -26,14 +28,25 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return helper.execute("SELECT * FROM resume r WHERE r.uuid =?", uuid, ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                throw new NotExistStorageException(uuid);
-            }
-            return new Resume(uuid, rs.getString("full_name"));
-        });
+        return helper.execute("" +
+                        " SELECT * FROM resume r " +
+                        " LEFT JOIN contact c " +
+                        "     ON r.uuid = c.resume_uuid " +
+                        "  WHERE r.uuid =? ",
+                uuid, ps -> {
+                    ps.setString(1, uuid);
+                    ResultSet rs = ps.executeQuery();
+                    if (!rs.next()) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    Resume r =  new Resume(uuid, rs.getString("full_name"));
+                    do {
+                        String value = rs.getString("value");
+                        ContactType type = ContactType.valueOf(rs.getString("type"));
+                        r.setContacts(type, value);
+                    } while (rs.next());
+                    return r;
+                });
     }
 
     @Override
@@ -56,6 +69,14 @@ public class SqlStorage implements Storage {
             ps.execute();
             return null;
         });
+        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+            helper.<Void>execute("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)", resume.getUuid(), ps -> {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                return null;
+            });
+        }
     }
 
     @Override
