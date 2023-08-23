@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,22 +97,16 @@ public class SqlStorage implements Storage {
                         "ORDER BY full_name, uuid",
                 null, ps -> {
                     ResultSet rs = ps.executeQuery();
-                    List<Resume> list = new ArrayList<>();
-                    if (rs.next()) {
-                        while (true) {
-                            Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
-                            boolean thereIsData = true;
-                            while (thereIsData && rs.getString("resume_uuid").equals(resume.getUuid())) {
-                                addContact(rs, resume);
-                                thereIsData = rs.next();
-                            }
-                            list.add(resume);
-                            if (!thereIsData) {
-                                break;
-                            }
+                    Map<String, Resume> map = new LinkedHashMap<>();
+                    while (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        if (!map.containsKey(uuid)) {
+                            map.put(uuid, new Resume(uuid, rs.getString("full_name")));
                         }
+                        addContact(rs, map.get(uuid));
                     }
-                    return list;
+
+                    return new ArrayList<>(map.values());
                 });
     }
 
