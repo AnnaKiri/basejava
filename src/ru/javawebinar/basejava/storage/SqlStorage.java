@@ -90,24 +90,18 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return helper.execute("" +
-                        "SELECT * FROM resume r " +
-                        "LEFT JOIN contact c " +
-                        "ON r.uuid = c.resume_uuid " +
-                        "ORDER BY full_name, uuid",
-                null, ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> map = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        if (!map.containsKey(uuid)) {
-                            map.put(uuid, new Resume(uuid, rs.getString("full_name")));
-                        }
-                        addContact(rs, map.get(uuid));
-                    }
-
-                    return new ArrayList<>(map.values());
-                });
+        return helper.transactionalExecute(conn -> {
+            Map<String, Resume> map = new LinkedHashMap<>();
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    map.put(uuid, new Resume(uuid, rs.getString("full_name")));
+                }
+            }
+            getContacts(conn, map);
+            return new ArrayList<>(map.values());
+        });
     }
 
     @Override
@@ -144,6 +138,15 @@ public class SqlStorage implements Storage {
                 ps.addBatch();
             }
             ps.executeBatch();
+        }
+    }
+
+    private void getContacts(Connection conn, Map<String, Resume> map) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact")) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                addContact(rs, map.get(rs.getString("resume_uuid")));
+            }
         }
     }
 }
