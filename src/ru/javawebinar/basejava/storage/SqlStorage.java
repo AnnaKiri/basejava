@@ -132,20 +132,18 @@ public class SqlStorage implements Storage {
             SectionType sectionType = SectionType.valueOf(rs.getString("type"));
 
             switch (sectionType) {
-                case OBJECTIVE, PERSONAL:
-                    resume.setSections(sectionType, new TextSection(content));
-                    break;
-                case ACHIEVEMENT, QUALIFICATIONS:
+                case OBJECTIVE, PERSONAL -> resume.setSections(sectionType, new TextSection(content));
+                case ACHIEVEMENT, QUALIFICATIONS -> {
                     String[] strings = content.split("\n");
                     List<String> list = Arrays.asList(strings);
                     resume.setSections(sectionType, new ListTextSection(list));
-                    break;
+                }
             }
         }
     }
 
     private void deleteFromTable(Resume resume, String tableName) {
-        helper.execute("DELETE FROM " + tableName + " WHERE resume_uuid = ?", null, ps -> {
+        helper.execute(String.format("DELETE FROM %s WHERE resume_uuid = ?", tableName), null, ps -> {
             ps.setString(1, resume.getUuid());
             ps.execute();
             return null;
@@ -172,17 +170,12 @@ public class SqlStorage implements Storage {
                 ps.setString(2, String.valueOf(sectionType));
 
                 switch (sectionType) {
-                    case OBJECTIVE, PERSONAL:
-                        ps.setString(3, ((TextSection) e.getValue()).getDescription());
-                        break;
-                    case ACHIEVEMENT, QUALIFICATIONS:
+                    case OBJECTIVE, PERSONAL -> ps.setString(3, ((TextSection) e.getValue()).getDescription());
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> list = ((ListTextSection) e.getValue()).getStrings();
-                        String description = "";
-                        for (String string : list) {
-                            description = description + string + "\n";
-                        }
+                        String description = String.join("\n", list);
                         ps.setString(3, description);
-                        break;
+                    }
                 }
                 ps.addBatch();
             }
@@ -191,7 +184,7 @@ public class SqlStorage implements Storage {
     }
 
     private void getTable(Connection conn, Map<String, Resume> map, String tableName, FillResume fillResume) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tableName)) {
+        try (PreparedStatement ps = conn.prepareStatement(String.format("SELECT * FROM %s", tableName))) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 fillResume.action(rs, map.get(rs.getString("resume_uuid")));
@@ -200,7 +193,7 @@ public class SqlStorage implements Storage {
     }
 
     private void getInfo(Connection conn, Resume resume, String tableName, FillResume fillResume) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE resume_uuid = ?")) {
+        try (PreparedStatement ps = conn.prepareStatement(String.format("SELECT * FROM %s WHERE resume_uuid = ?", tableName))) {
             ps.setString(1, resume.getUuid());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

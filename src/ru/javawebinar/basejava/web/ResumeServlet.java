@@ -12,7 +12,13 @@ import java.io.IOException;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
+    private Storage storage;
 
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        storage = Config.get().getStorage();
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +34,6 @@ public class ResumeServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + "!");
 
-        Storage storage = Config.get().getStorage();
         List<Resume> list = storage.getAllSorted();
         response.getWriter().write("<table>\n" + "  <tr>\n");
         response.getWriter().write("<th>uuid</th>\n" + "<th>full_name</th>\n" + "</tr>\n");
@@ -38,5 +43,6 @@ public class ResumeServlet extends HttpServlet {
         }
         response.getWriter().write("</table>");
     }
+
 }
 
