@@ -71,6 +71,18 @@ public class Resume implements Comparable<Resume>, Serializable {
         this.fullName = fullName;
     }
 
+    public String getSectionByType(SectionType type) {
+        switch (type) {
+            case OBJECTIVE:
+            case PERSONAL:
+                return ((TextSection) sections.get(type)).getDescription();
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                return String.join("\n", ((ListTextSection) sections.get(type)).getStrings());
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

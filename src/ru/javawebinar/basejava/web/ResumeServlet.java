@@ -1,8 +1,7 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 
 import javax.servlet.ServletException;
@@ -10,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -32,12 +33,30 @@ public class ResumeServlet extends HttpServlet {
             if (value != null && value.trim().length() != 0) {
                 r.setContacts(type, value);
             } else {
-
-
                 r.getContacts().remove(type);
             }
         }
-        storage.update(r);
+
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value == null && value.trim().length() < 2) {
+                r.getSections().remove(type);
+            } else {
+                switch (type) {
+                    case OBJECTIVE, PERSONAL -> r.setSections(type, new TextSection(value));
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        String[] strings = value.split("\n");
+                        List<String> list = Arrays.asList(strings);
+                        r.setSections(type, new ListTextSection(list));
+                    }
+                }
+            }
+        }
+        if (uuid.equals("null")) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         response.sendRedirect("resume");
     }
 
