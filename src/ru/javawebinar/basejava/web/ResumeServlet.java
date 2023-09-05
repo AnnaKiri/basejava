@@ -39,7 +39,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            if (value == null && value.trim().length() < 2) {
+            if (value == null || value.trim().length() < 2) {
                 r.getSections().remove(type);
             } else {
                 switch (type) {

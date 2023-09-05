@@ -30,18 +30,13 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <dl>
                 <dt>${type.title}</dt>
-                <c:if test="${resume.uuid == null}">
-                <dd><textarea rows="5" name="${type.name()}" cols="100" ></textarea>
-                    </c:if>
-                    <c:if test="${resume.uuid != null}">
-                <dd><textarea rows="5" name="${type.name()}" cols="100" >${resume.getSectionByType(type)}</textarea>
-                    </c:if>
+                <dd><textarea rows="5" name="${type.name()}" cols="100" >${ resume.getSection(type) != null ? resume.getSectionByType(type) : null }</textarea>
                 </dd>
             </dl>
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="button" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
