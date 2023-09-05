@@ -26,8 +26,20 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
+        if (fullName == null || fullName.trim().isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Недопустимое значение fullName");
+            return;
+        }
+
+        final boolean isCreate = (uuid == null || uuid.length() == 0);
+        Resume r;
+        if (isCreate) {
+            r = new Resume(fullName);
+        } else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        }
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -52,7 +64,7 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        if (uuid.equals("null")) {
+        if (isCreate) {
             storage.save(r);
         } else {
             storage.update(r);
@@ -71,6 +83,7 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
+            case "add" -> r = new Resume();
             case "delete" -> {
                 storage.delete(uuid);
                 response.sendRedirect("resume");
