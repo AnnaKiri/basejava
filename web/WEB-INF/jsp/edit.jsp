@@ -17,7 +17,7 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <h1>Имя:</h1>
         <dl>
-            <input type="text" name="fullName" size=55 value="${resume.fullName}">
+            <input type="text" name="fullName" size=55 value="${resume.fullName}" required>
         </dl>
         <h2>Контакты:</h2>
         <c:forEach var="type" items="<%=ContactType.values()%>">

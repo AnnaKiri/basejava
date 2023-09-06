@@ -26,8 +26,8 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        if (fullName == null || fullName.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Недопустимое значение fullName");
+        if (fullName.trim().isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "fullName can not be empty");
             return;
         }
 
