@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,12 @@ public class ListTextSection extends Section {
     public ListTextSection() {
     }
 
+    public ListTextSection(String... strings) {
+        this(Arrays.asList(strings));
+    }
+
     public ListTextSection(List<String> stringList) {
+        Objects.requireNonNull(stringList, "descriptions must not be null");
         this.strings = stringList;
     }
 
@@ -41,6 +47,6 @@ public class ListTextSection extends Section {
             stringBuilder.append(list);
         }
         stringBuilder.append("\n");
-        return  stringBuilder.toString();
+        return stringBuilder.toString();
     }
 }
