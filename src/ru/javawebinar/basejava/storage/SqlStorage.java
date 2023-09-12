@@ -4,9 +4,13 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.FillResume;
 import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.util.JsonParser;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     public final SqlHelper helper;
@@ -130,15 +134,7 @@ public class SqlStorage implements Storage {
         String content = rs.getString("content");
         if (content != null) {
             SectionType sectionType = SectionType.valueOf(rs.getString("type"));
-
-            switch (sectionType) {
-                case OBJECTIVE, PERSONAL -> resume.setSections(sectionType, new TextSection(content));
-                case ACHIEVEMENT, QUALIFICATIONS -> {
-                    String[] strings = content.split("\n");
-                    List<String> list = Arrays.asList(strings);
-                    resume.setSections(sectionType, new ListTextSection(list));
-                }
-            }
+            resume.setSections(sectionType, JsonParser.read(content, Section.class));
         }
     }
 
@@ -166,17 +162,9 @@ public class SqlStorage implements Storage {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, content) VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
                 ps.setString(1, resume.getUuid());
-                SectionType sectionType = SectionType.valueOf(e.getKey().name());
-                ps.setString(2, String.valueOf(sectionType));
-
-                switch (sectionType) {
-                    case OBJECTIVE, PERSONAL -> ps.setString(3, ((TextSection) e.getValue()).getDescription());
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> list = ((ListTextSection) e.getValue()).getStrings();
-                        String description = String.join("\n", list);
-                        ps.setString(3, description);
-                    }
-                }
+                ps.setString(2, e.getKey().name());
+                Section section = e.getValue();
+                ps.setString(3, JsonParser.write(section, Section.class));
                 ps.addBatch();
             }
             ps.executeBatch();
