@@ -1,5 +1,7 @@
 <%@ page import="ru.javawebinar.basejava.model.TextSection" %>
 <%@ page import="ru.javawebinar.basejava.model.ListTextSection" %>
+<%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -58,6 +60,30 @@
                                 </ul>
                             </td>
                         </tr>
+                    </c:when>
+                    <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                        <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>">
+                            <tr>
+                                <td colspan="2">
+                                    <c:choose>
+                                        <c:when test="${empty company.name}">
+                                            <h3>${company.website}</h3>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <h3><a href="${company.website}">${company.name}</a></h3>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                            <c:forEach var="period" items="${company.periods}">
+                                <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
+                                <tr>
+                                    <td width="15%" style="vertical-align: top"><%=period.getStartDate().getYear() + "/" + period.getStartDate().getMonthValue() + " - " + (period.getEndDate().equals(LocalDate.MIN) ? "Сейчас" : period.getEndDate().getYear() + "/" + period.getEndDate().getMonthValue())%>
+                                    </td>
+                                    <td><b>${period.position}</b><br>${period.description}</td>
+                                </tr>
+                            </c:forEach>
+                        </c:forEach>
                     </c:when>
                 </c:choose>
             <% } %>
