@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
+            String[] values = request.getParameterValues(type.name());
             if (value == null || value.trim().length() < 2) {
                 r.getSections().remove(type);
             } else {
@@ -61,6 +64,28 @@ public class ResumeServlet extends HttpServlet {
                         String[] strings = value.split("\n");
                         List<String> list = Arrays.stream(strings).filter(a -> !a.equals("")).toList();
                         r.setSections(type, new ListTextSection(list));
+                    }
+                    case EDUCATION, EXPERIENCE -> {
+                        List<Company> companies = new ArrayList<>();
+                        String[] urls = request.getParameterValues(type.name() + "url");
+                        for (int i = 0; i < values.length; i++) {
+                            String name = values[i];
+                            if (!(name == null) || !(name.trim().length() == 0)) {
+                                List<Period> periods = new ArrayList<>();
+                                String pfx = type.name() + i;
+                                String[] startDates = request.getParameterValues(pfx + "startDate");
+                                String[] endDates = request.getParameterValues(pfx + "endDate");
+                                String[] positions = request.getParameterValues(pfx + "position");
+                                String[] descriptions = request.getParameterValues(pfx + "description");
+                                for (int j = 0; j < positions.length; j++) {
+                                    if (!(positions[j] == null) || !(positions[j].trim().length() == 0)) {
+                                        periods.add(new Period(LocalDate.parse(startDates[j]), LocalDate.parse(endDates[j]), positions[j], descriptions[j]));
+                                    }
+                                }
+                                companies.add(new Company(periods, name, urls[i]));
+                            }
+                        }
+                        r.setSections(type, new CompanySection(companies));
                     }
                 }
             }
