@@ -42,41 +42,85 @@
                     </dl>
                 </c:when>
                 <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                    <dl>
+                        <dt style="margin-left: 10px">Название компании:</dt>
+                        <dd><input type="text" name='${type}' size="75"></dd>
+                    </dl>
+                    <dl>
+                        <dt style="margin-left: 10px">Сайт:</dt>
+                        <dd><input type="text" name='${type}url' size="75"></dd>
+                    </dl>
+                    <dl>
+                        <dt style="margin-left: 30px">Дата начала:</dt>
+                        <dd><input type="text" name="${type}0startDate" size="30"></dd>
+                    </dl>
+                    <dl>
+                        <dt style="margin-left: 30px">Дата окончания:</dt>
+                        <dd><input type="text" name="${type}0endDate" size="30"></dd>
+                    </dl>
+                    <dl>
+                        <dt style="margin-left: 30px">Должность:</dt>
+                        <dd><input type="text" name="${type}0position" size="30"></dd>
+                    </dl>
+                    <dl>
+                        <dt style="margin-left: 30px">Описание:</dt>
+                        <dd><textarea rows="3" name="${type}0description" cols="70"></textarea></dd>
+                    </dl>
                     <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>"
                                varStatus="counter">
                         <dl>
-                            <dt>Название компании:</dt>
-                            <dd><input type="text" name='${type}' size=100 value="${company.getName()}"></dd>
+                            <dt style="margin-left: 10px">Название компании:</dt>
+                            <dd><input type="text" name='${type}' size=75 value="${company.getName()}"></dd>
                         </dl>
                         <dl>
-                            <dt>Сайт:</dt>
-                            <dd><input type="text" name='${type}url' size=100 value="${company.getWebsite()}"></dd>
+                            <dt style="margin-left: 10px">Сайт:</dt>
+                            <dd><input type="text" name='${type}url' size=75 value="${company.getWebsite()}"></dd>
                         </dl>
                         <br>
                         <div style="margin-left: 30px">
                             <c:forEach var="period" items="${company.periods}">
                                 <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
                                 <dl>
-                                    <dt>Дата начала:</dt>
+                                    <dt style="margin-left: 30px">Дата начала:</dt>
+                                    <dd><input type="text" name="${type}${counter.index+1}startDate" size="30"
+                                               placeholder="MM/yyyy"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="margin-left: 30px">Дата окончания:</dt>
+                                    <dd><input type="text" name="${type}${counter.index+1}endDate" size="30"
+                                               placeholder="MM/yyyy"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="margin-left: 30px">Должность:</dt>
+                                    <dd><input type="text" name="${type}${counter.index+1}position" size="30"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="margin-left: 30px">Описание:</dt>
+                                    <dd><textarea rows="3" name="${type}${counter.index+1}description" cols="70"></textarea></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="margin-left: 30px">Дата начала:</dt>
                                     <dd>
-                                        <input type="text" name="${type}${counter.index}startDate" size=10
+                                        <input type="text" name="${type}${counter.index+1}startDate" size=15
                                                value="${period.startDate}" placeholder="MM/yyyy">
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>Дата окончания:</dt>
+                                    <dt style="margin-left: 30px">Дата окончания:</dt>
                                     <dd>
-                                        <input type="text" name="${type}${counter.index}endDate" size=10
+                                        <input type="text" name="${type}${counter.index+1}endDate" size=15
                                                value="${period.endDate}" placeholder="MM/yyyy">
+                                    </dd>
                                 </dl>
                                 <dl>
-                                    <dt>Должность:</dt>
-                                    <dd><input type="text" name='${type}${counter.index}position' size=75
+                                    <dt style="margin-left: 30px">Должность:</dt>
+                                    <dd><input type="text" name='${type}${counter.index+1}position' size=75
                                                value="${period.position}">
+                                    </dd>
                                 </dl>
                                 <dl>
-                                    <dt>Описание:</dt>
-                                    <dd><textarea name="${type}${counter.index}description" rows=5
+                                    <dt style="margin-left: 30px">Описание:</dt>
+                                    <dd><textarea name="${type}${counter.index+1}description" rows=5
                                                   cols=75>${period.description}</textarea></dd>
                                 </dl>
                             </c:forEach>

@@ -52,16 +52,14 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (SectionType type : SectionType.values()) {
-            String value = request.getParameter(type.name());
             String[] values = request.getParameterValues(type.name());
-            if (value == null || value.trim().length() < 2) {
+            if (values.length == Arrays.stream(values).filter(a -> a.trim().equals("")).count()) {
                 r.getSections().remove(type);
             } else {
                 switch (type) {
-                    case OBJECTIVE, PERSONAL -> r.setSections(type, new TextSection(value));
+                    case OBJECTIVE, PERSONAL -> r.setSections(type, new TextSection(values[0]));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        value = value.replace("\r", "");
-                        String[] strings = value.split("\n");
+                        String[] strings = values[0].replace("\r", "").split("\n");
                         List<String> list = Arrays.stream(strings).filter(a -> !a.equals("")).toList();
                         r.setSections(type, new ListTextSection(list));
                     }
@@ -70,15 +68,16 @@ public class ResumeServlet extends HttpServlet {
                         String[] urls = request.getParameterValues(type.name() + "url");
                         for (int i = 0; i < values.length; i++) {
                             String name = values[i];
-                            if (!(name == null) || !(name.trim().length() == 0)) {
+                            if (name != null && name.trim().length() != 0) {
                                 List<Period> periods = new ArrayList<>();
                                 String pfx = type.name() + i;
                                 String[] startDates = request.getParameterValues(pfx + "startDate");
                                 String[] endDates = request.getParameterValues(pfx + "endDate");
                                 String[] positions = request.getParameterValues(pfx + "position");
                                 String[] descriptions = request.getParameterValues(pfx + "description");
+
                                 for (int j = 0; j < positions.length; j++) {
-                                    if (!(positions[j] == null) || !(positions[j].trim().length() == 0)) {
+                                    if (startDates[j].trim().length() != 0) {
                                         periods.add(new Period(LocalDate.parse(startDates[j]), LocalDate.parse(endDates[j]), positions[j], descriptions[j]));
                                     }
                                 }
