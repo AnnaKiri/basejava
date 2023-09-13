@@ -93,9 +93,13 @@ public class ResumeTestData {
         Company education2 = new Company(fillPeriodList(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 1), "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", ""), "Luxoft", "http://www.luxoft.ru/");
         Company education3 = new Company(fillPeriodList(LocalDate.of(2005, 1, 1), LocalDate.of(2005, 4, 1), "3 месяца обучения мобильным IN сетям (Берлин)", ""), "Siemens AG", "https://www.siemens.com/global/en.html");
         Company education4 = new Company(fillPeriodList(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 1), "6 месяцев обучения цифровым телефонным сетям (Москва)", ""), "Alcatel", "http://www.alcatel.ru/");
-        Company education5 = new Company(fillPeriodList(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
-        Company education6 = new Company(fillPeriodList(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
-        Company education7 = new Company(fillPeriodList(LocalDate.of(1984, 9, 1), LocalDate.of(1987, 6, 1), "Закончил с отличием", ""), "Заочная физико-техническая школа при МФТИ", "https://mipt.ru/");
+
+        List<Period> periodList = new ArrayList<>();
+        periodList.add(new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", ""));
+        periodList.add(new Period(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", ""));
+        Company education5 = new Company(periodList, "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/");
+
+        Company education6 = new Company(fillPeriodList(LocalDate.of(1984, 9, 1), LocalDate.of(1987, 6, 1), "Закончил с отличием", ""), "Заочная физико-техническая школа при МФТИ", "https://mipt.ru/");
         companyList = new ArrayList<>();
         companyList.add(education1);
         companyList.add(education2);
@@ -103,7 +107,6 @@ public class ResumeTestData {
         companyList.add(education4);
         companyList.add(education5);
         companyList.add(education6);
-        companyList.add(education7);
         resume.setSections(SectionType.EDUCATION, new CompanySection(companyList));
 
         return resume;

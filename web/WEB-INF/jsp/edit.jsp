@@ -52,11 +52,11 @@
                     </dl>
                     <dl>
                         <dt style="margin-left: 30px">Дата начала:</dt>
-                        <dd><input type="text" name="${type}0startDate" size="30"></dd>
+                        <dd><input type="text" name="${type}0startDate" size="30" placeholder="yyyy-MM-dd"></dd>
                     </dl>
                     <dl>
                         <dt style="margin-left: 30px">Дата окончания:</dt>
-                        <dd><input type="text" name="${type}0endDate" size="30"></dd>
+                        <dd><input type="text" name="${type}0endDate" size="30" placeholder="yyyy-MM-dd или Сейчас"></dd>
                     </dl>
                     <dl>
                         <dt style="margin-left: 30px">Должность:</dt>
@@ -78,45 +78,41 @@
                         </dl>
                         <br>
                         <div style="margin-left: 30px">
+                            <dl>
+                                <dt style="margin-left: 30px">Дата начала:</dt>
+                                <dd><input type="text" name="${type}${counter.index+1}startDate" size="30"
+                                           placeholder="yyyy-MM-dd"></dd>
+                            </dl>
+                            <dl>
+                                <dt style="margin-left: 30px">Дата окончания:</dt>
+                                <dd><input type="text" name="${type}${counter.index+1}endDate" size="30"
+                                           placeholder="yyyy-MM-dd или Сейчас"></dd>
+                            </dl>
+                            <dl>
+                                <dt style="margin-left: 30px">Должность:</dt>
+                                <dd><input type="text" name="${type}${counter.index+1}position" size="30"></dd>
+                            </dl>
+                            <dl>
+                                <dt style="margin-left: 30px">Описание:</dt>
+                                <dd><textarea rows="3" name="${type}${counter.index+1}description" cols="70"></textarea></dd>
+                            </dl>
+
                             <c:forEach var="period" items="${company.periods}">
                                 <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
                                 <dl>
                                     <dt style="margin-left: 30px">Дата начала:</dt>
-                                    <dd><input type="text" name="${type}${counter.index+1}startDate" size="30"
-                                               placeholder="MM/yyyy"></dd>
+                                    <dd><input type="text" name="${type}${counter.index+1}startDate" size=15
+                                               value="${period.startDate}" placeholder="yyyy-MM-dd"></dd>
                                 </dl>
                                 <dl>
                                     <dt style="margin-left: 30px">Дата окончания:</dt>
-                                    <dd><input type="text" name="${type}${counter.index+1}endDate" size="30"
-                                               placeholder="MM/yyyy"></dd>
-                                </dl>
-                                <dl>
-                                    <dt style="margin-left: 30px">Должность:</dt>
-                                    <dd><input type="text" name="${type}${counter.index+1}position" size="30"></dd>
-                                </dl>
-                                <dl>
-                                    <dt style="margin-left: 30px">Описание:</dt>
-                                    <dd><textarea rows="3" name="${type}${counter.index+1}description" cols="70"></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dt style="margin-left: 30px">Дата начала:</dt>
-                                    <dd>
-                                        <input type="text" name="${type}${counter.index+1}startDate" size=15
-                                               value="${period.startDate}" placeholder="MM/yyyy">
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt style="margin-left: 30px">Дата окончания:</dt>
-                                    <dd>
-                                        <input type="text" name="${type}${counter.index+1}endDate" size=15
-                                               value="${period.endDate}" placeholder="MM/yyyy">
-                                    </dd>
+                                    <dd><input type="text" name="${type}${counter.index+1}endDate" size=15
+                                               value="${period.endTitle}" placeholder="yyyy-MM-dd или Сейчас"></dd>
                                 </dl>
                                 <dl>
                                     <dt style="margin-left: 30px">Должность:</dt>
                                     <dd><input type="text" name='${type}${counter.index+1}position' size=75
-                                               value="${period.position}">
-                                    </dd>
+                                               value="${period.position}"></dd>
                                 </dl>
                                 <dl>
                                     <dt style="margin-left: 30px">Описание:</dt>

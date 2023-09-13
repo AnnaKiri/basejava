@@ -78,7 +78,8 @@ public class ResumeServlet extends HttpServlet {
 
                                 for (int j = 0; j < positions.length; j++) {
                                     if (startDates[j].trim().length() != 0) {
-                                        periods.add(new Period(LocalDate.parse(startDates[j]), LocalDate.parse(endDates[j]), positions[j], descriptions[j]));
+                                        LocalDate endDate = endDates[j].equals("Сейчас") ? LocalDate.MIN :  LocalDate.parse(endDates[j]);
+                                        periods.add(new Period(LocalDate.parse(startDates[j]), endDate, positions[j], descriptions[j]));
                                     }
                                 }
                                 companies.add(new Company(periods, name, urls[i]));
