@@ -78,7 +78,7 @@ public class ResumeServlet extends HttpServlet {
 
                                 for (int j = 0; j < positions.length; j++) {
                                     if (startDates[j].trim().length() != 0) {
-                                        LocalDate endDate = endDates[j].equals("Сейчас") ? LocalDate.MIN :  LocalDate.parse(endDates[j]);
+                                        LocalDate endDate = endDates[j].equals("Сейчас") ? LocalDate.MIN : LocalDate.parse(endDates[j]);
                                         periods.add(new Period(LocalDate.parse(startDates[j]), endDate, positions[j], descriptions[j]));
                                     }
                                 }
@@ -109,33 +109,50 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
-            case "add" -> r = new Resume();
             case "delete" -> {
                 storage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> r = storage.get(uuid);
+            case "add" -> r = Resume.EMPTY;
+
+            case "view" -> r = storage.get(uuid);
+            case "edit" -> {
+                r = storage.get(uuid);
+                for (SectionType type : SectionType.values()) {
+                    Section section = r.getSection(type);
+                    switch (type) {
+                        case OBJECTIVE, PERSONAL -> {
+                            if (section == null) {
+                                section = TextSection.EMPTY;
+                            }
+                        }
+                        case ACHIEVEMENT, QUALIFICATIONS -> {
+                            if (section == null) {
+                                section = ListTextSection.EMPTY;
+                            }
+                        }
+                        case EDUCATION, EXPERIENCE -> {
+                            CompanySection companySection = (CompanySection) section;
+                            List<Company> companies = new ArrayList<>();
+                            companies.add(Company.EMPTY);
+                            if (companySection != null) {
+                                for (Company comp : companySection.getCompanies()) {
+                                    List<Period> periods = new ArrayList<>();
+                                    periods.add(Period.EMPTY);
+                                    periods.addAll(comp.getPeriods());
+                                    companies.add(new Company(periods, comp.getName(), comp.getWebsite()));
+                                }
+                            }
+                            section = new CompanySection(companies);
+                        }
+                    }
+                    r.setSections(type, section);
+                }
+            }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
 
-        if (!("view".equals(action))) {
-            for (SectionType type : SectionType.values()) {
-                if (r.getSection(type) == null) {
-                    switch (type) {
-                        case OBJECTIVE, PERSONAL -> {
-                            r.setSections(type, new TextSection(""));
-                        }
-                        case ACHIEVEMENT, QUALIFICATIONS -> {
-                            r.setSections(type, new ListTextSection(new ArrayList<>(List.of(""))));
-                        }
-                        case EDUCATION, EXPERIENCE -> {
-                            r.setSections(type, new CompanySection());
-                        }
-                    }
-                }
-            }
-        }
         request.setAttribute("resume", r);
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")

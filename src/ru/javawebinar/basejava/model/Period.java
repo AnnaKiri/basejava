@@ -11,6 +11,7 @@ import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Period implements Serializable {
+    public static final Period EMPTY = new Period();
     private static final long serialVersionUID = 1L;
 
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
@@ -39,6 +40,9 @@ public class Period implements Serializable {
     }
 
     public String getEndTitle() {
+        if (endDate == null) {
+            return "";
+        }
         return endDate.equals(LocalDate.MIN) ? "Сейчас" : endDate.toString();
     }
 

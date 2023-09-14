@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +10,10 @@ public class CompanySection extends Section {
     private List<Company> companies;
 
     public CompanySection() {
+    }
+
+    public CompanySection(Company... companies) {
+        this(Arrays.asList(companies));
     }
 
     public CompanySection(List<Company> organizationList) {

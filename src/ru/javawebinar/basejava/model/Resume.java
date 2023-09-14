@@ -16,6 +16,17 @@ public class Resume implements Comparable<Resume>, Serializable {
     public static final Comparator<Resume> RESUME_COMPARATOR =
             Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
+    public static final Resume EMPTY = new Resume();
+
+    static {
+        EMPTY.setSections(SectionType.OBJECTIVE, TextSection.EMPTY);
+        EMPTY.setSections(SectionType.PERSONAL, TextSection.EMPTY);
+        EMPTY.setSections(SectionType.ACHIEVEMENT, ListTextSection.EMPTY);
+        EMPTY.setSections(SectionType.QUALIFICATIONS, ListTextSection.EMPTY);
+        EMPTY.setSections(SectionType.EXPERIENCE, new CompanySection(Company.EMPTY));
+        EMPTY.setSections(SectionType.EDUCATION, new CompanySection(Company.EMPTY));
+    }
+
     private String fullName;
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
