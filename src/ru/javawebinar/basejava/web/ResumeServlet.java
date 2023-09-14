@@ -118,6 +118,24 @@ public class ResumeServlet extends HttpServlet {
             case "view", "edit" -> r = storage.get(uuid);
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
+
+        if (!("view".equals(action))) {
+            for (SectionType type : SectionType.values()) {
+                if (r.getSection(type) == null) {
+                    switch (type) {
+                        case OBJECTIVE, PERSONAL -> {
+                            r.setSections(type, new TextSection(""));
+                        }
+                        case ACHIEVEMENT, QUALIFICATIONS -> {
+                            r.setSections(type, new ListTextSection(new ArrayList<>(List.of(""))));
+                        }
+                        case EDUCATION, EXPERIENCE -> {
+                            r.setSections(type, new CompanySection());
+                        }
+                    }
+                }
+            }
+        }
         request.setAttribute("resume", r);
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
