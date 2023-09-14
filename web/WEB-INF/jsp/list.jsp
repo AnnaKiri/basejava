@@ -17,8 +17,8 @@
         <tr>
             <th>Имя</th>
             <th>Email</th>
-            <th></th>
-            <th></th>
+            <th>Delete</th>
+            <th>Edit</th>
         </tr>
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume"/>

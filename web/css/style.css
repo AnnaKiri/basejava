@@ -4,16 +4,16 @@ section {
 }
 
 header {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
+    background: none repeat scroll 0 0 #EDEFF2;
+    color: #4A586E;
     font-size: 20px;
     padding: 5px 20px;
     text-align: center;
 }
 
 footer {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
+    background: none repeat scroll 0 0 #EDEFF2;
+    color: #4A586E;
     font-size: 20px;
     padding: 5px 20px;
     margin: 20px 0;
@@ -22,26 +22,62 @@ footer {
 
 dl {
     background: none repeat scroll 0 0 #FAFAFA;
+    color: #4A586E;
     margin: 8px 0;
     padding: 0;
 }
 
 dt {
+    color: #4A586E;
     display: inline-block;
     width: 170px;
 }
 
+td {
+    color: #4A586E;
+}
+
+th {
+    color: #4A586E;
+}
+
 dd {
+    color: #4A586E;
     display: inline-block;
     margin-left: 8px;
     vertical-align: top;
 }
 
+h1 {
+    color: #4A586E;
+    font-size: 35px;
+    line-height: 30px;
+    margin: 45px 0 10px;
+}
+
 h2, h3 {
-    margin: 15px 0 5px;
+    color: #4A586E;
+    margin: 20px 0 5px;
+}
+
+job-name {
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 30px;
+    width: 50%;
+    margin-left: 135px;
+}
+
+contacts {
+    color: #4A586E;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 30px;
+    margin-top: 21px;
 }
 
 li {
+    color: #4A586E;
     margin: 15px 0;
 }
 
