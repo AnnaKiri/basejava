@@ -71,8 +71,8 @@
                             <tr>
                                 <td colspan="2">
                                     <c:choose>
-                                        <c:when test="${empty company.name}">
-                                            <h3>${company.website}</h3>
+                                        <c:when test="${empty company.website}">
+                                            <h3><job-name>${company.name}</job-name></h3>
                                         </c:when>
                                         <c:otherwise>
                                             <h3><job-name><a href="${company.website}">${company.name}</a></job-name></h3>
