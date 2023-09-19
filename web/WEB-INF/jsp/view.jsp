@@ -2,6 +2,7 @@
 <%@ page import="ru.javawebinar.basejava.model.ListTextSection" %>
 <%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
 <%@ page import="java.time.LocalDate" %>
+<%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -81,8 +82,9 @@
                             </tr>
                             <c:forEach var="period" items="${company.periods}">
                                 <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
+
                                 <tr>
-                                    <td width="15%" style="vertical-align: top"><%=period.getStartDate().getYear() + "/" + period.getStartDate().getMonthValue() + " - " + (period.getEndDate().equals(LocalDate.MIN) ? "Сейчас" : period.getEndDate().getYear() + "/" + period.getEndDate().getMonthValue())%>
+                                    <td width="15%" style="vertical-align: top"><%=DateUtil.format(period.getStartDate()) + " - " + DateUtil.format(period.getEndDate())%>
                                     </td>
                                     <td><b>${period.position}</b><br>${period.description}</td>
                                 </tr>

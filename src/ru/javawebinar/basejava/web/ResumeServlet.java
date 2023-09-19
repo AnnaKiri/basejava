@@ -3,13 +3,13 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,8 +78,7 @@ public class ResumeServlet extends HttpServlet {
 
                                 for (int j = 0; j < positions.length; j++) {
                                     if (startDates[j].trim().length() != 0) {
-                                        LocalDate endDate = endDates[j].equals("Сейчас") ? LocalDate.MIN : LocalDate.parse(endDates[j]);
-                                        periods.add(new Period(LocalDate.parse(startDates[j]), endDate, positions[j], descriptions[j]));
+                                        periods.add(new Period(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), positions[j], descriptions[j]));
                                     }
                                 }
                                 companies.add(new Company(periods, name, urls[i]));

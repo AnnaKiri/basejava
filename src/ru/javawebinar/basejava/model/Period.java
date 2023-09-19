@@ -39,13 +39,6 @@ public class Period implements Serializable {
         return endDate;
     }
 
-    public String getEndTitle() {
-        if (endDate == null) {
-            return "";
-        }
-        return endDate.equals(LocalDate.MIN) ? "Сейчас" : endDate.toString();
-    }
-
     public String getPosition() {
         return position;
     }
